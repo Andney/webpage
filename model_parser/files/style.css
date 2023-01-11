@@ -1,0 +1,96 @@
+body{font-size:14px;font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;line-height:1.5em;background:#fafbfc;color:#333;line-height:26px}
+body a{color:#00f}
+h3{font-size:1.2em;margin-bottom:10px}
+pre{font:.95em 'andale mono',monotype,'lucida console',monospace;line-height:1.5}
+.validate{padding:10px 0;display:flex;flex-direction:row;justify-content:space-between}
+.buttons{width:58%;margin-right:0;display:flex;flex-direction:row;justify-content:space-between}
+.info{display:block;padding:0 0 30px;clear:both;width:100%;border-bottom:1px solid #eee}
+.info ul{margin:5px 0}
+.info li{margin:0;padding:0;font-size:14px;color:grey}
+p{font-size:14px;color:grey}
+p.heading{margin-top:20px;font-size:15px;font-weight:700;padding-bottom:0;color:#333}
+li code,p code{line-height:2.1}
+header{max-width:1100;background-color:#fff;z-index:1;border-bottom:1px solid #f0f0f0}
+nav{margin:0 auto 0;padding:15px 15px;color:#353535;font-size:13px;max-width:1100px;align-items:center}
+.dev-tools-logo{width:30px;height:30px;padding:0;float:left;background:#1e8bc3;border-radius:2px;text-align:center;margin:4px 0 0;font-weight:700;font-size:20px;letter-spacing:.2px;color:#fff}
+.logo{display:block;padding:6px 15px 0;float:left;height:30px;line-height:30px}
+.logo h1{font-size:17px;font-weight:700;float:left;margin:0;color:#333}
+.sub-title,tagline-title{font-size:13px;color:grey}
+.menu{align-items:center;height:30px}
+.more-dev{height:30px;line-height:30px}
+nav:after{content:"";display:table;clear:both}
+nav ul li.pro-button{background:#1e8bc3;border-left:none;border-right:none;font-size:10px;font-weight:600;padding:1px 0 0;color:#fff;border-radius:2px;margin:6px 15px}
+nav ul li.pro-button a{color:#fff}
+nav ul li.pro-button:hover a{background:#555}
+.toggle,[id^=drop]{display:none}
+nav ul{float:right;margin:0;list-style:none;position:relative;padding:0;z-index:101}
+nav ul li{margin:0;display:inline-block;background-color:#fafafa;padding:7px 0;border-left:1px solid #f0f0f0;border-right:1px solid #f0f0f0}
+nav a{display:block;padding:0 15px;color:#333;text-decoration:none}
+nav ul li ul li:hover{background:grey}
+nav ul ul{display:none;position:absolute;top:40px;right:0;border-top:1px solid #f0f0f0}
+nav ul li:hover>ul{display:inherit}
+nav ul ul li{width:240px;float:none;display:list-item;position:relative;border-bottom:1px solid #f0f0f0;padding:7px 0;line-height:20px}
+nav ul ul li.jscompress{border-left:5px solid #f8dc3c}
+nav ul ul li.json{border-left:5px solid #1e8bc3}
+nav ul ul li.compare{border-left:5px solid #446cb3}
+nav ul ul li.dns{border-left:5px solid #26a65b}
+nav ul ul li.comp{border-left:5px solid #3498db}
+nav ul ul li.keygen{border-left:5px solid #eb9532}
+nav ul ul li.jsvalidate{border-left:5px solid #ffcf4b}
+nav ul ul ul li{position:relative;top:-60px;left:300px}
+.tagline-title{font-size:11px}
+li>a:only-child:after{content:''}
+.three-lines{position:relative;display:inline-block;width:.8em;height:.8em;margin:7px 10px 0 0;border-top:.1em solid #333;border-bottom:.1em solid #333}
+.three-lines:before{content:"";position:absolute;top:.3em;left:0;width:100%;border-top:.1em solid #333}
+.hide{display:none}
+.container{display:block;margin:0 auto;max-width:1100px;padding:10px 15px}
+footer{text-align:center;max-width:1100px;padding:15px;margin:0 auto 0;border-top:1px solid #eee;font-size:12px;font-weight:700}
+main{display:block;width:100%;max-width:950px;margin:0 auto;padding:1.5em 0}
+#model{width:100%;height:380px;border:1px solid #e1e1e1;margin-bottom:1em;font-size:14px}
+.line-error{background-color:#fbe3e4}
+button[type=submit]{background-color:#fff;padding:10px 15px;text-decoration:none;border:1px solid #e1e1e1;font-size:14px;font-family:Open Sans,sans-serif;font-weight:700;color:#333}
+button[class=model]{background-color:#4889db;padding:10px 15px;text-decoration:none;border:1px solid #e1e1e1;font-size:14px;font-family:Open Sans,sans-serif;font-weight:700;color:#fff}
+input[id=fileName]{background-color:#fff;padding:10px 15px;text-decoration:none;border:1px solid #e1e1e1;font-size:14px;font-family:Open Sans,sans-serif;font-weight:700;color:#333;vetical-align:middle}
+button.copy,button[type=reset]{background-color:rgba(255,0,0,.5);padding:10px 15px;text-decoration:none;border:1px solid #ddd;font-size:14px;font-family:Open Sans,sans-serif;font-weight:700;color:#fff}
+button[type=reset]:hover{cursor:pointer;background:#ddd;border:1px solid #ccc}
+@media all and (min-width:541px){button.copy{display:none}
+}
+#result-container{display:none;padding-top:15px}
+#result-container.shown{display:block}
+#result-container h3{font-size:1.3em}
+#result{border:1px solid transparent;margin:1.6em 0;padding:.8em}
+#result:empty{display:none}
+#result.error{background:#fbe3e4;color:#d12f19;border-color:#fbc2c4}
+#result.success{background:#e6efc2;color:#529214;border-color:#c6d880}
+#headCode,#implementCode{border:1px solid transparent;margin:1.6em 0;padding:.8em}
+#implementCode.model-result{background:#f6f8fa;color:#529214;border-color:#c6d880}
+#headCode.model-result{background:#f6f8fa;color:#529214;border-color:#c6d880}
+.partner{display:block;flex-direction:column;width:100%;padding:0 15px 15px;justify-content:center}
+.partner p{margin-bottom:.3em;font-size:1.5em}
+.partner strong{padding:.1em .4em;background-color:#1e8bc3;color:#fff}
+.partner sub{font-weight:200;font-size:1.3em}
+footer{padding-bottom:3.5em!important}
+.bsa-ad{display:none;margin:2em 0 1em;padding:1.5em 1em;background-color:#e5eaef;border-radius:3px;flex-flow:row nowrap}
+.partner{display:flex;flex-direction:column;width:44%;justify-content:center}
+.partner p{margin-bottom:.3em;line-height:1.5;font-size:1.5em}
+.partner strong{color:#fff;background-color:#1e8bc3;border-radius:3px;padding:.1em .3em}
+.partner sub{font-weight:200;font-size:1.3em}
+.bsa-cpc #_default_{position:relative;display:flex;font-size:14px;line-height:1.5}
+.bsa-cpc .default-ad{display:none}
+.bsa-cpc ._default_{position:relative;display:block;overflow:hidden;margin:0 1em;padding:1em;width:50%;border-radius:3px;background-color:#fff;line-height:1.5}
+.bsa-cpc a{color:inherit;text-decoration:none;transition:background-color .15s ease-in-out}
+.bsa-cpc a:hover{color:#fff;background-color:#1e8bc3}
+.bsa-cpc .default-image img{display:block;float:left;margin-right:10px;width:36px;border-radius:7.5%}
+.bsa-cpc .default-description,.bsa-cpc .default-title{display:block;margin-left:46px;max-width:calc(100% - 36px)}
+.bsa-cpc .default-title{font-weight:600}
+@media only screen and (min-width:320px) and (max-width:759px){.bsa-cpc #_default_{flex-wrap:wrap}
+.bsa-cpc ._default_{margin:.2em 1em;width:100%}
+}
+@media all and (max-width:775px){.description-title{display:none}
+.more-dev{display:none}
+.three-lines{margin:7px 5px}
+}
+@media all and (max-width:460px){.sub-title{display:none}
+}
+@media all and (max-width:360px){.more-tools{display:none}
+}

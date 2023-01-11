@@ -1,0 +1,36 @@
+@charset "utf-8";
+
+body {
+	font-size: 18px;
+	font-family: "微软雅黑";
+	font-weight: lighter;
+	color: #444;
+	background-color: #D0D0D0;
+	margin: 0;
+	padding: 0;
+	word-break:break-all;
+	word-wrap:break-word;
+}
+textarea, input, select {
+	resize: none;
+	outline: none;
+	font-size: 1em;
+	font-family: "微软雅黑";
+	font-weight: lighter;
+}
+.main {
+	max-width: 748px;
+	min-width: 320px;
+	margin: 0 auto;
+}
+.main .content {
+	background-color: #fff;
+	padding: 30px 10px;
+	text-align: justify;
+	text-justify: distribute;
+}
+.main .content .area {
+	max-width: 728px;
+	line-height: 160%;
+	overflow: hidden
+}

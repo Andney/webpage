@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ModelParser</title>
+    <meta name="description" content="convert json to object-c model and java bean.">
+    <script src="./files/json2.js"></script>
+    <script src="./files/jsonlint.js"></script>
+    <script src="./files/jsonmodel.js"></script>
+    <link href="./files/style.css" rel="stylesheet">
+    <link rel="shortcut icon" href="./files/res/favicon.ico">
+    
+    <link rel="stylesheet" href="./files/codemirror.css">
+    <link rel="stylesheet" href="./files/lint.css">
+
+    <script src="./files/codemirror.js"></script>
+    <script src="./files/javascript.js"></script>
+    <script src="./files/lint.js"></script>
+    <script src="./files/json-lint.js"></script>
+    <script>
+      var _czc = _czc || [];
+    </script>
+
+    <script>
+      window.onload = function() {
+        document.getElementById("convertmodel").onclick = function() {
+          jsonModel.objectcModel();
+          _czc.push(["_trackEvent", "model", "objective-c", "", "", 0]);
+        },
+        document.getElementById("swiftmodel").onclick = function() {
+          jsonModel.swiftModel();
+          _czc.push(["_trackEvent", "model", "swift", "", "", 0]);
+        },
+        document.getElementById("convertjavamodel").onclick = function() {
+          jsonModel.javaBean();
+          _czc.push(["_trackEvent", "model", "java", "", "", 0]);
+        },
+        document.getElementById("qtmodel").onclick = function() {
+          jsonModel.qtModel();
+          _czc.push(["_trackEvent", "model", "qt", "", "", 0]);
+        },
+        document.getElementById("reset").onclick = function() {
+          jsonModel.clearContent();
+          editor_json.setValue("");
+          _czc.push(["_trackEvent", "model", "clear", "", "", 0]);
+        },
+
+        //example
+        document.getElementById("fileName").value = "ExampleModelName";
+        editor_json.setValue('{"orderId":104,"totalPrice":13.45,"product":{"id":123,"name":"Product name","price":12.95,"soldout":true}}');
+        document.getElementById("convertmodel").onclick();
+
+        prettyPrint();
+        
+        var list = document.getElementsByClassName("CodeMirror cm-s-default");
+        for (var i = list.length - 1; i >= 1; i--) {
+          list[i].remove();
+        }
+      }
+    </script>
+  </head>
+  
+  <body>
+    <div class="bsa-cpc-inline"></div>
+    <header>
+      <nav>
+        <div class="dev-tools-logo">M</div>
+        <div class="logo">
+          <h1>ModelEnd.com
+            <span class="sub-title">- convert JSON to model object</span>
+          </h1>
+        </div>
+      </nav>
+    </header>
+
+    <div class="container" id="contentdiv">
+      <textarea id="code" name="code" style="display: none;"></textarea><div class="CodeMirror cm-s-default"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 5px; left: 51px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;" tabindex="0"></textarea></div><div class="CodeMirror-vscrollbar" tabindex="-1" cm-not-content="true" style="width: 18px; pointer-events: none;"><div style="min-width: 1px; height: 0px;"></div></div><div class="CodeMirror-hscrollbar" tabindex="-1" cm-not-content="true" style="height: 18px; pointer-events: none;"><div style="height: 100%; min-height: 1px; width: 0px;"></div></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 46px; margin-bottom: 0px; border-right-width: 30px; min-height: 34px; min-width: 7px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>1</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-cursors"><div class="CodeMirror-cursor" style="left: 4px; top: 0px; height: 26px;">&nbsp;</div></div><div class="CodeMirror-code" role="presentation" style=""><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -46px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 16px; width: 21px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre></div></div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 34px;"></div><div class="CodeMirror-gutters" style="height: 64px; left: 0px;"><div class="CodeMirror-gutter CodeMirror-lint-markers"></div><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 29px;"></div></div></div></div>
+      <div class="validate">
+        <input id="fileName" placeholder="ModelName">
+        <div class="buttons">
+          <button id="convertmodel" class="model">Objc-c Model</button>
+          <button id="swiftmodel" class="model">Swift Model</button>
+          <button id="convertjavamodel" class="model">Java Bean</button>
+          <button id="qtmodel" class="model">Qt Model</button>
+          <button id="reset" type="reset">Clear</button>
+          <!-- <button id="copy" class="copy">Copy</button> --></div>
+      </div>
+      <div id="precode"></div>
+      <section id="result-container">
+        <h3>Results</h3>
+        <pre id="result" class="success">JSON is valid!</pre></section>
+    </div>
+    <script>
+      var editor_json = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        mode: "application/json",
+        gutters: ["CodeMirror-lint-markers"],
+        lint: true
+      });
+    </script>
+    <script src="./files/prettify.js"></script>
+    <link type="text/css" rel="stylesheet" href="./files/prettify.css">
+</body>
+</html>
