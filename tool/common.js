@@ -10,7 +10,7 @@
     }
 })('CTTool', this, function () {
     'use strict';
-    
+
     function _showToast(msg) {
         setTimeout(function () {
             document.getElementsByClassName('toast-wrap')[0].getElementsByClassName('toast-msg')[0].innerHTML = msg;
@@ -22,14 +22,28 @@
         }, 500);
     }
 
-    function _copyToClipboard(text) {
-        const element = document.createElement("textarea");
-        element.value = text;
-        element.setAttribute("readonly", "readonly");
-        document.body.appendChild(element);
-        element.select();
-        document.execCommand('copy');
-        document.body.removeChild(element);
+    /** callback: 0-失败、1-成功、2-异常 */
+    function _copyToClipboard(text, callback) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                callback(1);
+            }).catch(() => {
+                callback(0);
+            });
+        } else {
+            if (typeof document.execCommand == 'function') {
+                const element = document.createElement("textarea");
+                element.value = text;
+                element.setAttribute("readonly", "readonly");
+                document.body.appendChild(element);
+                element.select();
+                let success = document.execCommand('copy');
+                document.body.removeChild(element);
+                callback(success ? 1 : 0);
+            } else {
+                callback(0);
+            }
+        }
     }
 
     function _randomUUID() {
@@ -60,7 +74,7 @@
             return (c === 'x' ? random : (random & 0x3) | 0x8).toString(16);
         });
     };
-    
+
     return {
         VERSION: '1.0.0',
         showToast: _showToast,

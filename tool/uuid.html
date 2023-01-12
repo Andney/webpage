@@ -86,8 +86,13 @@
 
 		function copy() {
 			var text = document.getElementById("output_result").innerText.trim();
-			CTTool.copyToClipboard(text);
-			CTTool.showToast("复制成功");
+			CTTool.copyToClipboard(text, function (type) {
+				if (type == 1) {
+					CTTool.showToast("复制成功");
+				} else {
+					CTTool.showToast("复制失败");
+				}
+			});
 		}
 		function clearContent() {
 			document.getElementById("output_result").innerHTML = "";
