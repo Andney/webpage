@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 	<title>URL编码、解码</title>
-	<link rel="stylesheet" type="text/css" href="./toast.css"/>
+	<link rel="stylesheet" type="text/css" href="./toast.css" />
 	<script src="./common.js"></script>
 	<style type="text/css">
 		body {
@@ -15,21 +16,24 @@
 			background-color: #D0D0D0;
 			margin: 0;
 			padding: 0;
-			word-break:break-all;
-			word-wrap:break-word;
+			word-break: break-all;
+			word-wrap: break-word;
 		}
+
 		.main {
 			max-width: 1080px;
 			width: 90%;
 			min-width: 320px;
 			margin: 0 auto;
 		}
+
 		.main .content {
 			background-color: #fff;
 			padding: 40px 30px;
 			text-align: justify;
 			text-justify: distribute;
 		}
+
 		#input_content {
 			width: 100%;
 			height: 100%;
@@ -42,15 +46,18 @@
 			color: #666;
 			font-size: 14px;
 		}
+
 		.actions input {
 			height: 2.5em;
 			padding-left: 1em;
 			padding-right: 1em;
 			margin-right: 10px;
 		}
+
 		#number {
 			height: 2em;
 		}
+
 		#output_result {
 			border: solid 1px #E0E0E0;
 			padding: 10px;
@@ -69,19 +76,19 @@
 		function refresh() {
 			var n = document.getElementById("number").value.trim();
 			if (n == "") n = "0";
-            if (parseInt(n) != n) return CTTool.showToast("请输入数字！");
+			if (parseInt(n) != n) return CTTool.showToast("请输入数字！");
 
-            let uuidList = generateUUID(n);
-            var result = "";
-            let checked = document.getElementById("checkbox").checked;
-            for (var i = 0; i < uuidList.length; i++) {
-            	let uuid = (checked === true) ? uuidList[i] : uuidList[i].replace(/-/g, "");
-            	if (result.length > 0) {
-            		result += "</br>";
-            	}
-            	result += uuid;
-            }
-            document.getElementById("output_result").innerHTML = result;
+			let uuidList = generateUUID(n);
+			var result = "";
+			let checked = document.getElementById("checkbox").checked;
+			for (var i = 0; i < uuidList.length; i++) {
+				let uuid = (checked === true) ? uuidList[i] : uuidList[i].replace(/-/g, "");
+				if (result.length > 0) {
+					result += "</br>";
+				}
+				result += uuid;
+			}
+			document.getElementById("output_result").innerHTML = result;
 		}
 
 		function copy() {
@@ -99,32 +106,35 @@
 		}
 	</script>
 </head>
+
 <body>
 	<div class="main">
 		<div class="content">
 			<div class="input_container" style="margin-top: 10px; margin-bottom: 10px;">
-                <p style="font-size:14px; color: #666;">生成数量(1~50)：</p>
-                <input id="number" type="number" name="num" maxlength="2" value="10">
-            </div>
-            <div class="actions" style="margin-bottom: 5px;">
-                <input type="button" value="生成" onclick="refresh();">
-                <input type="button" value="复制" onclick="copy();">
-                <input type="button" value="清空" onclick="clearContent();">
-            </div>
-            <label style="font-size:15px;"><input id="checkbox" type="checkbox" checked="true" value="" />是否要包含“-”</label>
-            <div class="output" style="margin-bottom: 20px;">
-            	<p style="font-size:14px; color: #666;">输出结果：</p>
-            	<div id="output_result"></div>
-            </div>
+				<p style="font-size:14px; color: #666;">生成数量(1~50)：</p>
+				<input id="number" type="number" name="num" maxlength="2" value="10">
+			</div>
+			<div class="actions" style="margin-bottom: 5px;">
+				<input type="button" value="生成" onclick="refresh();">
+				<input type="button" value="复制" onclick="copy();">
+				<input type="button" value="清空" onclick="clearContent();">
+			</div>
+			<input id="checkbox" type="checkbox" name="flag" value="" />
+			<label style="font-size:15px;" for="flag">是否要包含“-”</label>
+			<div class="output" style="margin-bottom: 20px;">
+				<p style="font-size:14px; color: #666;">输出结果：</p>
+				<div id="output_result"></div>
+			</div>
 		</div>
 	</div>
- 	<div class="toast-wrap">
- 		<span class="toast-msg"></span>
-    </div>
-    <script type="text/javascript">
-    	window.onload = function () {
-    		refresh();
-    	}
-    </script>
+	<div class="toast-wrap">
+		<span class="toast-msg"></span>
+	</div>
+	<script type="text/javascript">
+		window.onload = function () {
+			refresh();
+		}
+	</script>
 </body>
+
 </html>
