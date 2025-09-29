@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>加密工具</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/toast.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/common.css" />
+
+    <script src="../static/js/common.js"></script>
+    <script src="../static/js/vendor/crypto-js.min.js"></script>
+    <script type="text/javascript">
+        // 页面加载完成后执行
+        window.onload = function () {
+            // 检查CryptoJS是否加载成功
+            if (typeof CryptoJS === 'undefined') {
+                showToast('CryptoJS库加载失败，请检查文件路径是否正确');
+            }
+        };
+
+        // MD5加密函数
+        function md5Encrypt() {
+            let text = document.getElementById("md5_input").value.trim();
+            if (text.length < 1) {
+                showToast("内容为空");
+                return;
+            }
+
+            try {
+                // 使用CryptoJS进行MD5加密
+                const result = CryptoJS.MD5(text).toString();
+                document.getElementById("md5_output").innerText = result;
+            } catch (e) {
+                showToast('MD5加密失败: ' + e.message);
+                console.error('MD5加密失败:', e);
+            }
+        }
+
+        // AES加密函数
+        function aesEncrypt() {
+            let text = document.getElementById("aes_input").value.trim();
+            if (text.length < 1) {
+                showToast("内容为空");
+                return;
+            }
+
+            let key = document.getElementById("aes_key").value.trim() || 'default-aes-key-16';
+
+            try {
+                // 确保密钥长度合适
+                key = CryptoJS.enc.Utf8.parse(key.padEnd(32, key).substring(0, 32));
+                const iv = CryptoJS.enc.Utf8.parse('0123456789ABCDEF'); // 初始化向量
+
+                // 使用CryptoJS进行AES加密
+                const encrypted = CryptoJS.AES.encrypt(text, key, {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+
+                document.getElementById("aes_output").innerText = encrypted.toString();
+            } catch (e) {
+                showToast('AES加密失败: ' + e.message);
+                console.error('AES加密失败:', e);
+            }
+        }
+
+        // AES解密函数
+        function aesDecrypt() {
+            let text = document.getElementById("aes_input").value.trim();
+            if (text.length < 1) {
+                showToast("内容为空");
+                return;
+            }
+
+            let key = document.getElementById("aes_key").value.trim() || 'default-aes-key-16';
+
+            try {
+                // 确保密钥长度合适
+                key = CryptoJS.enc.Utf8.parse(key.padEnd(32, key).substring(0, 32));
+                const iv = CryptoJS.enc.Utf8.parse('0123456789ABCDEF'); // 初始化向量
+
+                // 使用CryptoJS进行AES解密
+                const decrypted = CryptoJS.AES.decrypt(text, key, {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+
+                document.getElementById("aes_output").innerText = decrypted.toString(CryptoJS.enc.Utf8);
+            } catch (e) {
+                showToast('AES解密失败: ' + e.message);
+                console.error('AES解密失败:', e);
+            }
+        }
+
+        // 复制结果函数
+        function copyResult(tabId) {
+            var text = document.getElementById(tabId + "_output").innerText.trim();
+            if (text.length < 1) {
+                showToast("没有可复制的内容");
+                return;
+            }
+
+            CTTool.copyToClipboard(text, function (type) {
+                if (type == 1) {
+                    showToast("复制成功");
+                } else {
+                    showToast("复制失败");
+                }
+            });
+        }
+
+        // 清空内容函数
+        function clearContent(tabId) {
+            document.getElementById(tabId + "_input").value = "";
+            document.getElementById(tabId + "_output").innerText = "";
+            if (tabId === 'aes') {
+                document.getElementById("aes_key").value = "";
+            }
+        }
+
+        // 切换标签函数
+        function switchTab(tabId) {
+            // 隐藏所有标签内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            // 移除所有标签的激活状态
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // 显示选中的标签内容
+            document.getElementById(tabId + '-content').classList.add('active');
+            // 激活选中的标签
+            document.getElementById(tabId + '-tab').classList.add('active');
+        }
+
+        // 显示提示信息函数
+        function showToast(msg) {
+            // 尝试使用common.js中的toast功能
+            if (typeof CTTool !== 'undefined' && typeof CTTool.showToast === 'function') {
+                CTTool.showToast(msg);
+            } else {
+                // 降级实现toast功能
+                const toast = document.createElement('div');
+                toast.innerText = msg;
+                toast.style.cssText =
+                    'position: fixed; bottom: 15%; left: 50%; transform: translateX(-50%); ' +
+                    'background-color: rgba(0, 0, 0, 0.7); color: white; padding: 8px 16px; ' +
+                    'border-radius: 4px; z-index: 9999; font-size: 14px;';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transition = 'opacity 0.5s';
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 500);
+                }, 2000);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="main">
+        <div class="content">
+            <strong>加密工具</strong>
+
+            <!-- 标签切换 -->
+            <div class="tab-container">
+                <div id="md5-tab" class="tab active" onclick="switchTab('md5')">MD5加密</div>
+                <div id="aes-tab" class="tab" onclick="switchTab('aes')">AES加密/解密</div>
+            </div>
+
+            <!-- MD5标签内容 -->
+            <div id="md5-content" class="tab-content active">
+                <div class="input_container" style="margin-top: 10px; margin-bottom: 10px;">
+                    <textarea id="md5_input" placeholder="请输入需要MD5加密的内容..."></textarea>
+                </div>
+                <div class="output" style="display: block; margin-bottom: 20px;">
+                    <p style="font-size:14px; color: #666;">输出结果：</p>
+                    <div id="md5_output" class="output-result"></div>
+                </div>
+                <div class="actions">
+                    <input type="button" value="MD5加密" onclick="md5Encrypt();">
+                    <input type="button" value="复制结果" onclick="copyResult('md5');">
+                    <input type="button" value="清空" onclick="clearContent('md5');">
+                </div>
+            </div>
+
+            <!-- AES标签内容 -->
+            <div id="aes-content" class="tab-content">
+                <div class="input_container" style="margin-top: 10px; margin-bottom: 10px;">
+                    <textarea id="aes_input" placeholder="请输入需要AES加密或解密的内容..."></textarea>
+                </div>
+                <div class="key_container" style="margin-bottom: 10px;">
+                    <p class="input-title">密钥：</p>
+                    <input id="aes_key" type="text" class="input-text" placeholder="请输入密钥，默认为'default-aes-key-16'">
+                </div>
+                <div class="iv_container" style="margin-bottom: 10px;">
+                    <p class="input-title">初始化向量(IV)：</p>
+                    <input id="aes_iv" type="text" class="input-text" placeholder="请输入16位IV，默认为'0123456789ABCDEF'">
+                </div>
+                <div class="mode_container" style="margin-bottom: 10px;">
+                    <p class="input-title">加密模式：</p>
+                    <select id="aes_mode" style="width: 100%; height: 2.5em; padding: 0 10px; font-size: 14px;">
+                        <option value="CBC">CBC (默认)</option>
+                        <option value="ECB">ECB</option>
+                        <option value="CFB">CFB</option>
+                        <option value="OFB">OFB</option>
+                        <option value="CTR">CTR</option>
+                    </select>
+                </div>
+                <div class="output" style="display: block; margin-bottom: 20px;">
+                    <p style="font-size:14px; color: #666;">输出结果：</p>
+                    <div id="aes_output" class="output-result"></div>
+                </div>
+                <div class="actions">
+                    <input type="button" value="AES加密" onclick="aesEncrypt();">
+                    <input type="button" value="AES解密" onclick="aesDecrypt();">
+                    <input type="button" value="复制结果" onclick="copyResult('aes');">
+                    <input type="button" value="清空" onclick="clearContent('aes');">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="toast-wrap">
+        <span class="toast-msg"></span>
+    </div>
+</body>
+
+</html>

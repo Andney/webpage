@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>随机字符串生成器</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/toast.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/common.css" />
+    <script src="../static/js/common.js"></script>
+    <style type="text/css">
+        .options {
+            margin: 20px 0;
+        }
+
+        .option-group {
+            margin: 15px 0;
+        }
+
+        .option-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .option-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        .option-group input[type="number"] {
+            width: 100px;
+            height: 2em;
+            padding: 0 10px;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+    <script type="text/javascript">
+        function generate() {
+            // 获取配置选项
+            const includeNumbers = document.getElementById('include_numbers').checked;
+            const includeLowercase = document.getElementById('include_lowercase').checked;
+            const includeUppercase = document.getElementById('include_uppercase').checked;
+            const includeSymbols = document.getElementById('include_symbols').checked;
+            const length = parseInt(document.getElementById('string_length').value);
+            const count = parseInt(document.getElementById('string_count').value);
+            const prependDate = document.getElementById('prepend_date').checked;
+
+            // 验证长度
+            if (isNaN(length) || length < 1 || length > 1000) {
+                CTTool.showToast("请输入1-1000之间的长度");
+                return;
+            }
+
+            // 验证个数
+            if (isNaN(count) || count < 1 || count > 100) {
+                CTTool.showToast("请输入1-100之间的个数");
+                return;
+            }
+
+            // 验证至少选择了一种字符类型
+            if (!includeNumbers && !includeLowercase && !includeUppercase && !includeSymbols) {
+                CTTool.showToast("请至少选择一种字符类型");
+                return;
+            }
+
+            // 构建字符集
+            let charset = '';
+            if (includeNumbers) charset += '0123456789';
+            if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (includeSymbols) charset += '!@#$%^&*()_+-=[]{}|;:\'",.<>/?';
+
+            // 生成多个随机字符串
+            let results = [];
+            for (let j = 0; j < count; j++) {
+                let result = '';
+                // 生成单个随机字符串
+                for (let i = 0; i < length; i++) {
+                    const randomIndex = Math.floor(Math.random() * charset.length);
+                    result += charset[randomIndex];
+                }
+
+                // 拼接日期字符串
+                if (prependDate) {
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                    const dateStr = `${year}${month}${day}${hours}${minutes}${seconds}`;
+                    result = dateStr + result;
+                }
+
+                results.push(result);
+            }
+
+            // 显示结果（每行一个）
+            document.getElementById("output_result").innerText = results.join('\n');
+            CTTool.showToast(`成功生成${count}个随机字符串`);
+        }
+
+        function copy() {
+            var text = document.getElementById("output_result").innerText.trim();
+            if (text.length < 1) {
+                CTTool.showToast("没有可复制的内容");
+                return;
+            }
+            CTTool.copyToClipboard(text, function (type) {
+                if (type == 1) {
+                    CTTool.showToast("复制成功");
+                } else {
+                    CTTool.showToast("复制失败");
+                }
+            });
+        }
+
+        function clearResult() {
+            document.getElementById("output_result").innerText = '';
+            CTTool.showToast("已清空");
+        }
+    </script>
+</head>
+
+<body>
+    <div class="main">
+        <div class="content">
+            <strong>随机字符串生成器</strong>
+            <div class="options">
+                <div class="option-group">
+                    <label for="string_count">生成个数：</label>
+                    <input type="number" id="string_count" min="1" max="100" value="20" />
+                </div>
+
+                <div class="option-group">
+                    <label for="string_length">字符串长度：</label>
+                    <input type="number" id="string_length" min="1" max="1000" value="16" />
+                </div>
+
+                <div class="option-group">
+                    <label>字符类型：</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="include_numbers" checked />
+                            <label for="include_numbers">数字 (0-9)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="include_lowercase" checked />
+                            <label for="include_lowercase">小写字母 (a-z)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="include_uppercase" checked />
+                            <label for="include_uppercase">大写字母 (A-Z)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="include_symbols" />
+                            <label for="include_symbols">特殊符号</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="prepend_date" />
+                        <label for="prepend_date">前面拼接日期时间 (年月日时分秒)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="output" style="display: block; margin-bottom: 20px;">
+                <p style="font-size:14px; color: #666;">输出结果：</p>
+                <div id="output_result"></div>
+            </div>
+
+            <div class="actions">
+                <input type="button" value="生成" onclick="generate();">
+                <input type="button" value="复制结果" onclick="copy();">
+                <input type="button" value="清空" onclick="clearResult();">
+            </div>
+        </div>
+    </div>
+    <div class="toast-wrap">
+        <span class="toast-msg"></span>
+    </div>
+</body>
+
+</html>
