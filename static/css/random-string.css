@@ -1,0 +1,32 @@
+.options {
+    margin: 20px 0;
+}
+
+.option-group {
+    margin: 15px 0;
+}
+
+.option-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+.option-group input[type="number"] {
+    width: 100px;
+    height: 2em;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+.checkbox-group {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+}

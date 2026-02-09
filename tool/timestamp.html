@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+	<title>时间戳转换工具</title>
+	<link rel="stylesheet" type="text/css" href="../static/css/toast.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/timestamp.css" />
+	<script src="../static/js/common.js"></script>
+	<script src="../static/js/kq_countdown_timer.js"></script>
+</head>
+
+<body>
+	<div class="main">
+		<div class="content">
+			<div class="back-button">
+				<a href="../index.html" class="back-link">← 返回首页</a>
+			</div>
+
+			<h2>时间戳转换工具</h2>
+
+			<!-- 当前时间戳显示 -->
+			<div class="current-timestamp">
+				<p>当前的Unix时间戳是: <span id="current_timestamp"></span></p>
+				<div class="timestamp-controls">
+					<input type="button" value="开始" onclick="startTimestamp();">
+					<input type="button" value="停止" onclick="stopTimestamp();">
+					<input type="button" value="刷新" onclick="refreshTimestamp();">
+				</div>
+			</div>
+
+			<!-- 时间戳转日期 -->
+			<div class="convert-section">
+				<div class="convert-row">
+					<label for="timestamp_input">Unix时间戳 (Unix timestamp)</label>
+					<input type="text" id="timestamp_input" class="input-text" placeholder="请输入时间戳">
+					<select id="timestamp_unit">
+						<option value="seconds">秒</option>
+						<option value="milliseconds">毫秒</option>
+					</select>
+					<input type="button" value="转换" onclick="convertTimestamp();">
+					<input type="text" id="date_result1" class="input-text" readonly placeholder="转换结果">
+				</div>
+
+				<!-- 日期转时间戳 -->
+				<div class="convert-row">
+					<label>时间 (年/月/日 时:分:秒)</label>
+					<input type="text" id="date_input" class="input-text" placeholder="例如: 2026-02-07 12:00:00">
+					<input type="button" value="转换成Unix时间戳" onclick="convertToTimestamp();">
+					<input type="text" id="timestamp_result1" class="input-text" readonly placeholder="转换结果">
+					<select id="date_unit">
+						<option value="seconds">秒</option>
+						<option value="milliseconds">毫秒</option>
+					</select>
+				</div>
+
+				<!-- 年月日时分秒转时间戳 -->
+				<div class="convert-row">
+					<label>时间</label>
+					<div class="datetime-inputs">
+						<input type="number" id="year" class="input-small" value="2026" placeholder="年">
+						<span>年</span>
+						<input type="number" id="month" class="input-small" placeholder="月" min="1" max="12">
+						<span>月</span>
+						<input type="number" id="day" class="input-small" placeholder="日" min="1" max="31">
+						<span>日</span>
+						<input type="number" id="hour" class="input-small" placeholder="时" min="0" max="23">
+						<span>时</span>
+						<input type="number" id="minute" class="input-small" placeholder="分" min="0" max="59">
+						<span>分</span>
+						<input type="number" id="second" class="input-small" placeholder="秒" min="0" max="59">
+					</div>
+					<input type="button" value="转换Unix时间戳" onclick="convertFromDateTime();">
+					<input type="text" id="timestamp_result2" class="input-text" readonly placeholder="转换结果">
+					<select id="datetime_unit">
+						<option value="seconds">秒</option>
+						<option value="milliseconds">毫秒</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="toast-wrap">
+		<span class="toast-msg"></span>
+	</div>
+
+	<script type="text/javascript">
+		let timestampTimer = null;
+
+		// 页面加载完成后初始化
+		window.onload = function () {
+			initTimestampTimer();
+		};
+
+		// 初始化时间戳定时器
+		function initTimestampTimer() {
+			const farFuture = new Date('2100-01-01');
+
+			timestampTimer = new KQCountdownTimer({
+				endTime: farFuture,
+				onUpdate: function () {
+					updateCurrentTimestamp();
+				},
+				updateInterval: 1000
+			});
+
+			// 初始更新一次
+			updateCurrentTimestamp();
+		}
+
+		// 更新当前时间戳
+		function updateCurrentTimestamp() {
+			const now = Math.floor(Date.now() / 1000);
+			document.getElementById('current_timestamp').textContent = now;
+		}
+
+		// 开始时间戳更新
+		function startTimestamp() {
+			if (timestampTimer) {
+				timestampTimer.start();
+			}
+		}
+
+		// 停止时间戳更新
+		function stopTimestamp() {
+			if (timestampTimer) {
+				timestampTimer.pause();
+			}
+		}
+
+		// 刷新时间戳
+		function refreshTimestamp() {
+			updateCurrentTimestamp();
+		}
+
+		// 转换Unix时间戳为日期
+		function convertTimestamp() {
+			const timestamp = document.getElementById('timestamp_input').value.trim();
+			const unit = document.getElementById('timestamp_unit').value;
+
+			if (!timestamp) {
+				CTTool.showToast('请输入时间戳');
+				return;
+			}
+
+			let timestampMs = parseInt(timestamp);
+			if (isNaN(timestampMs)) {
+				CTTool.showToast('请输入有效的时间戳');
+				return;
+			}
+
+			// 根据单位转换为毫秒
+			if (unit === 'seconds') {
+				timestampMs *= 1000;
+			}
+
+			const date = new Date(timestampMs);
+			const dateStr = formatDate(date);
+			document.getElementById('date_result1').value = dateStr;
+			document.getElementById('date_output1').value = timestampMs / 1000;
+		}
+
+		// 转换日期为Unix时间戳
+		function convertToTimestamp() {
+			const dateStr = document.getElementById('date_input').value.trim();
+			const unit = document.getElementById('date_unit').value;
+
+			if (!dateStr) {
+				CTTool.showToast('请输入时间');
+				return;
+			}
+
+			const date = new Date(dateStr);
+			if (isNaN(date.getTime())) {
+				CTTool.showToast('请输入有效的时间格式');
+				return;
+			}
+
+			let timestamp = date.getTime();
+			if (unit === 'seconds') {
+				timestamp /= 1000;
+			}
+
+			document.getElementById('timestamp_result1').value = Math.floor(timestamp);
+		}
+
+		// 从年/月/日/时/分/秒转换为Unix时间戳
+		function convertFromDateTime() {
+			const year = document.getElementById('year').value.trim();
+			const month = document.getElementById('month').value.trim();
+			const day = document.getElementById('day').value.trim();
+			const hour = document.getElementById('hour').value.trim();
+			const minute = document.getElementById('minute').value.trim();
+			const second = document.getElementById('second').value.trim();
+			const unit = document.getElementById('datetime_unit').value;
+
+			if (!year || !month || !day || !hour || !minute || !second) {
+				CTTool.showToast('请填写完整的时间信息');
+				return;
+			}
+
+			const date = new Date(year, month - 1, day, hour, minute, second);
+			if (isNaN(date.getTime())) {
+				CTTool.showToast('请输入有效的时间');
+				return;
+			}
+
+			let timestamp = date.getTime();
+			if (unit === 'seconds') {
+				timestamp /= 1000;
+			}
+
+			document.getElementById('timestamp_result2').value = Math.floor(timestamp);
+		}
+
+		// 格式化日期
+		function formatDate(date) {
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hour = String(date.getHours()).padStart(2, '0');
+			const minute = String(date.getMinutes()).padStart(2, '0');
+			const second = String(date.getSeconds()).padStart(2, '0');
+			return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+		}
+	</script>
+</body>
+
+</html>

@@ -7,47 +7,85 @@
     <title>随机字符串生成器</title>
     <link rel="stylesheet" type="text/css" href="../static/css/toast.css" />
     <link rel="stylesheet" type="text/css" href="../static/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/random-string.css" />
+
     <script src="../static/js/common.js"></script>
-    <style type="text/css">
-        .options {
-            margin: 20px 0;
-        }
+</head>
 
-        .option-group {
-            margin: 15px 0;
-        }
+<body>
+    <div class="main">
+        <div class="content">
+            <div class="back-button">
+                <a href="../index.html" class="back-link">← 返回首页</a>
+            </div>
+            <h3>随机字符串生成器</h3>
+            <div class="options">
+                <div class="option-group">
+                    <label for="string_count">生成数量：</label>
+                    <input type="number" id="string_count" min="1" max="100" value="15" />
+                </div>
 
-        .option-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 16px;
-        }
+                <div class="option-group">
+                    <label for="string_length">生成长度：</label>
+                    <input type="number" id="string_length" min="1" max="1000" value="10" />
+                </div>
 
-        .option-group input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
-        }
+                <div class="option-group">
+                    <label>字符类型：</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="include_numbers" checked />数字(0-9)
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="include_lowercase" checked />小写字母(a-z)
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="include_uppercase" checked />大写字母(A-Z)
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="include_symbols" />特殊符号
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-        .option-group input[type="number"] {
-            width: 100px;
-            height: 2em;
-            padding: 0 10px;
-            font-size: 14px;
-        }
+                <div class="option-group">
+                    <div class="checkbox-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="prepend_date" checked />添加日期时间前缀(年月日时分秒)
+                        </label>
+                    </div>
+                </div>
+            </div>
 
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+            <div class="output" style="display: block; margin-bottom: 20px;">
+                <p style="font-size:14px; color: #666;">输出结果：</p>
+                <div id="output_result" class="output-result"></div>
+            </div>
 
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-        }
-    </style>
+            <div class="actions">
+                <input type="button" value="生成" onclick="generate();">
+                <input type="button" value="复制结果" onclick="copy();">
+                <input type="button" value="清空" onclick="clearResult();">
+            </div>
+        </div>
+    </div>
+    <div class="toast-wrap">
+        <span class="toast-msg"></span>
+    </div>
+
     <script type="text/javascript">
+        (function() {
+            generate();
+        })();
+
         function generate() {
             // 获取配置选项
             const includeNumbers = document.getElementById('include_numbers').checked;
@@ -111,7 +149,6 @@
 
             // 显示结果（每行一个）
             document.getElementById("output_result").innerText = results.join('\n');
-            CTTool.showToast(`成功生成${count}个随机字符串`);
         }
 
         function copy() {
@@ -134,68 +171,6 @@
             CTTool.showToast("已清空");
         }
     </script>
-</head>
-
-<body>
-    <div class="main">
-        <div class="content">
-            <strong>随机字符串生成器</strong>
-            <div class="options">
-                <div class="option-group">
-                    <label for="string_count">生成个数：</label>
-                    <input type="number" id="string_count" min="1" max="100" value="20" />
-                </div>
-
-                <div class="option-group">
-                    <label for="string_length">字符串长度：</label>
-                    <input type="number" id="string_length" min="1" max="1000" value="16" />
-                </div>
-
-                <div class="option-group">
-                    <label>字符类型：</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="include_numbers" checked />
-                            <label for="include_numbers">数字 (0-9)</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="include_lowercase" checked />
-                            <label for="include_lowercase">小写字母 (a-z)</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="include_uppercase" checked />
-                            <label for="include_uppercase">大写字母 (A-Z)</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="include_symbols" />
-                            <label for="include_symbols">特殊符号</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="option-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="prepend_date" />
-                        <label for="prepend_date">前面拼接日期时间 (年月日时分秒)</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="output" style="display: block; margin-bottom: 20px;">
-                <p style="font-size:14px; color: #666;">输出结果：</p>
-                <div id="output_result"></div>
-            </div>
-
-            <div class="actions">
-                <input type="button" value="生成" onclick="generate();">
-                <input type="button" value="复制结果" onclick="copy();">
-                <input type="button" value="清空" onclick="clearResult();">
-            </div>
-        </div>
-    </div>
-    <div class="toast-wrap">
-        <span class="toast-msg"></span>
-    </div>
 </body>
 
 </html>

@@ -1,17 +1,18 @@
 .toast-wrap {
     opacity: 0;
     position: fixed;
-    bottom: 15%;
+    top: 50%;
+    transform: translateY(-50%);
     color: #fff;
     width: 100%;
     text-align: center;
 }
 
 .toast-msg {
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 4px 8px;
+    background-color: rgba(0, 0, 0, 0.65);
+    padding: 0.3em 0.5em;
     border-radius: 5px;
-    font-size: 15px;
+    font-size: 17px;
 }
 
 .toastAnimate {

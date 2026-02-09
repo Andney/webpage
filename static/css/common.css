@@ -6,7 +6,7 @@ body {
     font-family: "Microsoft YaHei";
     font-weight: light;
     color: #444;
-    background-color: #D0D0D0;
+    background-color: #F0F0F0;
     margin: 0;
     padding: 0;
     word-break: break-all;
@@ -22,10 +22,42 @@ body {
 }
 
 .main .content {
+    margin-top: 20px;
+    border-radius: 10px;
     background-color: #fff;
     padding: 40px 30px;
     text-align: justify;
     text-justify: distribute;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.main .content h2 {
+    text-align: center;
+}
+
+.main .content h3 {
+    text-align: center;
+}
+
+.back-button {
+    margin-bottom: 20px;
+}
+
+.back-link {
+    display: inline-block;
+    color: #3182ce;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    background-color: #ebf8ff;
+    color: #2c5282;
+    text-decoration: none;
 }
 
 /* 输入文本区域 */
@@ -62,8 +94,9 @@ textarea:focus {
 }
 
 /* 输出结果 */
-.output-result, #output_result {
+.output-result {
     border: solid 1px #E0E0E0;
+    border-radius: 5px;
     padding: 10px;
     font-size: 14px;
 }
@@ -117,6 +150,12 @@ input[type="number"] {
 
 label {
     font-size: 15px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }
 
 p {

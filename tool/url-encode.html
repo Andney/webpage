@@ -4,7 +4,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-	<title>URL编码</title>
+	<title>URL编解码</title>
 	<link rel="stylesheet" type="text/css" href="../static/css/toast.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/common.css" />
 	<script src="../static/js/common.js"></script>
@@ -51,13 +51,16 @@
 <body>
 	<div class="main">
 		<div class="content">
-			<strong>URL编码/解码</strong>
+			<div class="back-button">
+				<a href="../index.html" class="back-link">← 返回首页</a>
+			</div>
+			<h3>URL编码/解码</h3>
 			<div class="input_container" style="margin-top: 10px; margin-bottom: 10px;">
 				<textarea id="input_content" placeholder="请输入内容..."></textarea>
 			</div>
 			<div class="output" style="display: block; margin-bottom: 20px;">
 				<p style="font-size:14px; color: #666;">输出结果：</p>
-				<div id="output_result"></div>
+				<div id="output_result" class="output-result"></div>
 			</div>
 			<div class="actions">
 				<input type="button" value="编码" onclick="encode();">
