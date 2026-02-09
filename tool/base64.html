@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+	<title>Base64编解码</title>
+	<link rel="stylesheet" type="text/css" href="../static/css/toast.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/common.css" />
+	<script src="../static/js/common.js"></script>
+	
+	<script type="text/javascript">
+		function encode() {
+			let text = getText();
+			if (text.length < 1) {
+				CTTool.showToast("内容为空");
+				return;
+			}
+			document.getElementById("output_result").innerText = btoa(unescape(encodeURIComponent(text)));
+			document.getElementById("image_preview").style.display = "none";
+		}
+		function decode() {
+			let text = getText();
+			if (text.length < 1) {
+				CTTool.showToast("内容为空");
+				return;
+			}
+			document.getElementById("output_result").innerText = decodeURIComponent(escape(atob(text)));
+			document.getElementById("image_preview").style.display = "none";
+		}
+		function showImage() {
+			let text = getText();
+			if (text.length < 1) {
+				CTTool.showToast("内容为空");
+				return;
+			}
+			try {
+				let img = document.getElementById("preview_img");
+				img.src = "data:image/png;base64," + text;
+				document.getElementById("image_preview").style.display = "block";
+			} catch (e) {
+				CTTool.showToast("无效的Base64图片数据");
+			}
+		}
+		function copy() {
+			var text = document.getElementById("output_result").innerText.trim();
+			CTTool.copyToClipboard(text, function (type) {
+				if (type == 1) {
+					CTTool.showToast("复制成功");
+				} else {
+					CTTool.showToast("复制失败");
+				}
+			});
+		}
+		function clearContent() {
+			setText("");
+			document.getElementById("output_result").innerText = "";
+			document.getElementById("image_preview").style.display = "none";
+		}
+		function setText(str) {
+			document.getElementById("input_content").value = str.trim();
+		}
+		function getText() {
+			return document.getElementById("input_content").value.trim();
+		}
+	</script>
+</head>
+
+<body>
+	<div class="main">
+		<div class="content">
+			<div class="back-button">
+				<a href="../index.html" class="back-link">← 返回首页</a>
+			</div>
+			<h3>Base64编解码</h3>
+			<div class="input_container" style="margin-top: 10px; margin-bottom: 10px;">
+				<textarea id="input_content" placeholder="请输入内容..."></textarea>
+			</div>
+			<div class="output" style="display: block; margin-bottom: 20px;">
+				<p style="font-size:14px; color: #666;">输出结果：</p>
+				<div id="output_result" class="output-result"></div>
+			</div>
+			<div id="image_preview" style="display: none; margin-bottom: 20px; text-align: center;">
+				<p style="font-size:14px; color: #666;">图片预览：</p>
+				<img id="preview_img" style="max-width: 80%; max-height: 300px;" />
+			</div>
+			<div class="actions">
+				<input type="button" value="编码" onclick="encode();">
+				<input type="button" value="解码" onclick="decode();">
+				<input type="button" value="显示图片" onclick="showImage();">
+				<input type="button" value="复制结果" onclick="copy();">
+				<input type="button" value="清空" onclick="clearContent();">
+			</div>
+		</div>
+	</div>
+	<div class="toast-wrap">
+		<span class="toast-msg"></span>
+	</div>
+</body>
+
+</html>
