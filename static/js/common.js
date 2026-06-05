@@ -13,12 +13,37 @@
 
     function _showToast(msg) {
         setTimeout(function () {
-            document.getElementsByClassName('toast-wrap')[0].getElementsByClassName('toast-msg')[0].innerHTML = msg;
-            var toastTag = document.getElementsByClassName('toast-wrap')[0];
-            toastTag.className = toastTag.className.replace('toastAnimate', '');
+            // 检查是否已存在 toast 容器，不存在则创建
+            var toastWrap = document.getElementsByClassName('toast-wrap')[0];
+            if (!toastWrap) {
+                toastWrap = document.createElement('div');
+                toastWrap.className = 'toast-wrap';
+                var toastMsg = document.createElement('span');
+                toastMsg.className = 'toast-msg';
+                toastWrap.appendChild(toastMsg);
+                document.body.appendChild(toastWrap);
+            } else {
+                // 如果元素被隐藏，需要重置显示状态
+                toastWrap.style.display = '';
+                toastWrap.style.opacity = '';
+            }
+            
+            var toastMsg = toastWrap.getElementsByClassName('toast-msg')[0];
+            toastMsg.innerHTML = msg;
+            toastWrap.className = toastWrap.className.replace('toastAnimate', '');
+            
+            // 强制重绘以重新触发动画
+            void toastWrap.offsetWidth;
+            
             setTimeout(function () {
-                toastTag.className = toastTag.className + ' toastAnimate';
-            }, 100);
+                toastWrap.className = toastWrap.className + ' toastAnimate';
+            }, 10);
+            
+            // 监听动画结束，动画完成后隐藏元素
+            toastWrap.addEventListener('animationend', function handler() {
+                toastWrap.removeEventListener('animationend', handler);
+                toastWrap.style.display = 'none';
+            });
         }, 500);
     }
 

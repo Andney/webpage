@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>字符串去重工具</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/toast.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/common.css" />
+    <script src="../static/js/common.js"></script>
+    <style>
+        .string-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .string-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .string-box label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .string-box textarea {
+            min-height: 400px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .string-box .output-area {
+            min-height: 400px;
+            max-height: 400px;
+            overflow: auto;
+            border: solid 1px #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .actions input {
+            height: 2.5em;
+            padding-left: 1.5em;
+            padding-right: 1.5em;
+            margin-right: 0;
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .actions input:hover {
+            background-color: #2c5282;
+        }
+        
+        .actions input.secondary {
+            background-color: #718096;
+        }
+        
+        .actions input.secondary:hover {
+            background-color: #4a5568;
+        }
+        
+        .options {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .options label {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .options input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .string-container {
+                flex-direction: column;
+            }
+            
+            .string-box textarea,
+            .string-box .output-area {
+                min-height: 200px;
+                max-height: 300px;
+            }
+        }
+    </style>
+    
+    <script type="text/javascript">
+        // 字符串去重
+        function uniqueStrings() {
+            let text = getInputText();
+            if (text.length < 1) {
+                CTTool.showToast("请输入字符串内容");
+                return;
+            }
+            
+            try {
+                // 按换行符分割字符串
+                let lines = text.split('\n');
+                
+                // 去除空行
+                let nonEmptyLines = lines.filter(line => line.trim() !== '');
+                
+                // 使用Set去重
+                let uniqueLines = [...new Set(nonEmptyLines)];
+                
+                // 输出结果
+                document.getElementById('output_result').textContent = uniqueLines.join('\n');
+                
+                CTTool.showToast(`去重完成，共 ${nonEmptyLines.length} 行，去重后 ${uniqueLines.length} 行`);
+            } catch (e) {
+                CTTool.showToast("处理失败: " + e.message);
+            }
+        }
+        
+        // 复制结果
+        function copyResult() {
+            let outputDiv = document.getElementById('output_result');
+            let text = outputDiv.textContent || outputDiv.innerText;
+            text = text.trim();
+            
+            if (text.length < 1) {
+                CTTool.showToast("没有可复制的内容");
+                return;
+            }
+            
+            CTTool.copyToClipboard(text, function (type) {
+                if (type == 1) {
+                    CTTool.showToast("复制成功");
+                } else {
+                    CTTool.showToast("复制失败");
+                }
+            });
+        }
+        
+        // 清空内容
+        function clearContent() {
+            setInputText("");
+            document.getElementById('output_result').innerHTML = "";
+            CTTool.showToast("已清空");
+        }
+        
+        // 加载示例
+        function loadExample() {
+            let example = `apple
+banana
+apple
+orange
+banana
+grape
+orange
+apple`;
+            setInputText(example);
+            CTTool.showToast("已加载示例");
+        }
+        
+        function getInputText() {
+            return document.getElementById("input_content").value;
+        }
+        
+        function setInputText(str) {
+            document.getElementById("input_content").value = str;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="main">
+        <div class="content">
+            <div class="back-button">
+                <a href="../index.html" class="back-link">← 返回首页</a>
+            </div>
+            <h3>字符串去重工具</h3>
+            
+            <div class="actions">
+                <input type="button" value="去重" onclick="uniqueStrings();">
+                <input type="button" value="复制结果" onclick="copyResult();">
+                <input type="button" value="清空" class="secondary" onclick="clearContent();">
+                <input type="button" value="示例" class="secondary" onclick="loadExample();">
+            </div>
+            
+            <div class="string-container">
+                <div class="string-box">
+                    <label>输入字符串 (每行一个):</label>
+                    <textarea id="input_content" placeholder="请输入字符串内容，每行一个..."></textarea>
+                </div>
+                <div class="string-box">
+                    <label>去重结果:</label>
+                    <div id="output_result" class="output-area"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
