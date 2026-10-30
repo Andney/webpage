@@ -79,6 +79,33 @@
 						<option value="milliseconds">毫秒</option>
 					</select>
 				</div>
+
+				<!-- 时长转换：秒/毫秒 ⇄ 时分秒 -->
+				<h3>时长转换 (秒/毫秒 ⇄ 时分秒)</h3>
+
+				<!-- 秒/毫秒转时分秒 -->
+				<div class="convert-row">
+					<label>时长 (数值)</label>
+					<input type="text" id="duration_input" class="input-text" placeholder="请输入时长数值, 例如: 3661">
+					<select id="duration_unit">
+						<option value="seconds">秒</option>
+						<option value="milliseconds">毫秒</option>
+					</select>
+					<input type="button" value="转换" onclick="convertDurationToHMS();">
+					<input type="text" id="hms_result" class="input-text" readonly placeholder="转换结果">
+				</div>
+
+				<!-- 时分秒转秒/毫秒 -->
+				<div class="convert-row">
+					<label>时分秒 (HH:mm:ss / mm:ss)</label>
+					<input type="text" id="hms_input" class="input-text" placeholder="例如: 01:01:01 或 61:01">
+					<input type="button" value="转换" onclick="convertHMSToDuration();">
+					<input type="text" id="duration_result" class="input-text" readonly placeholder="转换结果">
+					<select id="hms_unit">
+						<option value="seconds">秒</option>
+						<option value="milliseconds">毫秒</option>
+					</select>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -158,7 +185,6 @@
 			const date = new Date(timestampMs);
 			const dateStr = formatDate(date);
 			document.getElementById('date_result1').value = dateStr;
-			document.getElementById('date_output1').value = timestampMs / 1000;
 		}
 
 		// 转换日期为Unix时间戳
@@ -212,6 +238,85 @@
 			}
 
 			document.getElementById('timestamp_result2').value = Math.floor(timestamp);
+		}
+
+		// 时长(秒/毫秒)转换为时分秒(HH:mm:ss / mm:ss)
+		function convertDurationToHMS() {
+			const input = document.getElementById('duration_input').value.trim();
+			const unit = document.getElementById('duration_unit').value;
+
+			if (!input) {
+				CTTool.showToast('请输入时长数值');
+				return;
+			}
+
+			let totalSeconds = parseFloat(input);
+			if (isNaN(totalSeconds) || totalSeconds < 0) {
+				CTTool.showToast('请输入有效的时长数值');
+				return;
+			}
+
+			// 统一换算成秒
+			if (unit === 'milliseconds') {
+				totalSeconds /= 1000;
+			}
+			totalSeconds = Math.floor(totalSeconds);
+
+			const seconds = totalSeconds % 60;
+			const hours = Math.floor(totalSeconds / 3600);
+			let result;
+			if (hours > 0) {
+				// 小时大于0时使用 HH:mm:ss 格式
+				const minutes = Math.floor((totalSeconds % 3600) / 60);
+				result = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+			} else {
+				// 否则使用 mm:ss 格式
+				const minutes = Math.floor(totalSeconds / 60);
+				result = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+			}
+
+			document.getElementById('hms_result').value = result;
+		}
+
+		// 时分秒(HH:mm:ss / mm:ss)转换为时长(秒/毫秒)
+		function convertHMSToDuration() {
+			const input = document.getElementById('hms_input').value.trim();
+			const unit = document.getElementById('hms_unit').value;
+
+			if (!input) {
+				CTTool.showToast('请输入时分秒');
+				return;
+			}
+
+			const parts = input.split(':');
+			if (parts.length < 2 || parts.length > 3) {
+				CTTool.showToast('请输入有效格式 (HH:mm:ss 或 mm:ss)');
+				return;
+			}
+
+			let hours = 0, minutes, seconds;
+			if (parts.length === 3) {
+				hours = parseInt(parts[0], 10);
+				minutes = parseInt(parts[1], 10);
+				seconds = parseInt(parts[2], 10);
+			} else {
+				// mm:ss 格式, 分钟允许超过59
+				minutes = parseInt(parts[0], 10);
+				seconds = parseInt(parts[1], 10);
+			}
+
+			if (isNaN(hours) || isNaN(minutes) || isNaN(seconds) || hours < 0 || minutes < 0 || seconds < 0) {
+				CTTool.showToast('请输入有效的时间数值');
+				return;
+			}
+			if (seconds >= 60 || (parts.length === 3 && minutes >= 60)) {
+				CTTool.showToast('分/秒数值不能大于59');
+				return;
+			}
+
+			const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+			const result = unit === 'milliseconds' ? totalSeconds * 1000 : totalSeconds;
+			document.getElementById('duration_result').value = result;
 		}
 
 		// 格式化日期
