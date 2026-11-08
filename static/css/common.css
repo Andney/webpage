@@ -19,13 +19,14 @@ body {
     width: 90%;
     min-width: 320px;
     margin: 0 auto;
+    margin-bottom: 50px;
 }
 
 .main .content {
     margin-top: 20px;
     border-radius: 10px;
     background-color: #fff;
-    padding: 40px 30px;
+    padding: 40px 30px 80px;
     text-align: justify;
     text-justify: distribute;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);

@@ -280,12 +280,17 @@
 
 		// 时分秒(HH:mm:ss / mm:ss)转换为时长(秒/毫秒)
 		function convertHMSToDuration() {
-			const input = document.getElementById('hms_input').value.trim();
+			let input = document.getElementById('hms_input').value.trim();
 			const unit = document.getElementById('hms_unit').value;
 
 			if (!input) {
 				CTTool.showToast('请输入时分秒');
 				return;
+			}
+
+			if (input.indexOf('：') >= 0 || input.indexOf(' ') >= 0) {
+				input = input.replace('：', ':').replace(' ', '');
+				document.getElementById('hms_input').value = input;
 			}
 
 			const parts = input.split(':');
